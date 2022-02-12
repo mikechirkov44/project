@@ -1,85 +1,85 @@
 /*
-***БАЗА ДАННЫХ SIPPLIERS_BASE***
-Автор: Чирков Михаил, 2022
-База данных предназначена для хранения и обработки данных 
-по заказам поставщикам. Содержит информацию об ответственных сотрудниках (managers), 
-поставщиках(suppliers), товарных группах (product_groups), номенклатуре заказываемых 
-товаров и услуг (nomenclature), размещенных заказов (orders) и платежах (payments).
+***Р‘РђР—Рђ Р”РђРќРќР«РҐ SIPPLIERS_BASE***
+РђРІС‚РѕСЂ: Р§РёСЂРєРѕРІ РњРёС…Р°РёР», 2022
+Р‘Р°Р·Р° РґР°РЅРЅС‹С… РїСЂРµРґРЅР°Р·РЅР°С‡РµРЅР° РґР»СЏ С…СЂР°РЅРµРЅРёСЏ Рё РѕР±СЂР°Р±РѕС‚РєРё РґР°РЅРЅС‹С… 
+РїРѕ Р·Р°РєР°Р·Р°Рј РїРѕСЃС‚Р°РІС‰РёРєР°Рј. РЎРѕРґРµСЂР¶РёС‚ РёРЅС„РѕСЂРјР°С†РёСЋ РѕР± РѕС‚РІРµС‚СЃС‚РІРµРЅРЅС‹С… СЃРѕС‚СЂСѓРґРЅРёРєР°С… (managers), 
+РїРѕСЃС‚Р°РІС‰РёРєР°С…(suppliers), С‚РѕРІР°СЂРЅС‹С… РіСЂСѓРїРїР°С… (product_groups), РЅРѕРјРµРЅРєР»Р°С‚СѓСЂРµ Р·Р°РєР°Р·С‹РІР°РµРјС‹С… 
+С‚РѕРІР°СЂРѕРІ Рё СѓСЃР»СѓРі (nomenclature), СЂР°Р·РјРµС‰РµРЅРЅС‹С… Р·Р°РєР°Р·РѕРІ (orders) Рё РїР»Р°С‚РµР¶Р°С… (payments).
 */
 
 DROP DATABASE IF EXISTS suppliers_base;
 CREATE DATABASE suppliers_base CHARACTER SET 'utf8';
 USE suppliers_base;
 
--- Создаем таблицу Managers, в которой будут храниться
--- данные о сотрудниках: менеджерах отдела снабжения и аустсорсинга:
--- Имя, Фамилия, Должность, Email, Tелефон, Дата трудоустройства (важно для понимания опыта сотрудника). 
+-- РЎРѕР·РґР°РµРј С‚Р°Р±Р»РёС†Сѓ Managers, РІ РєРѕС‚РѕСЂРѕР№ Р±СѓРґСѓС‚ С…СЂР°РЅРёС‚СЊСЃСЏ
+-- РґР°РЅРЅС‹Рµ Рѕ СЃРѕС‚СЂСѓРґРЅРёРєР°С…: РјРµРЅРµРґР¶РµСЂР°С… РѕС‚РґРµР»Р° СЃРЅР°Р±Р¶РµРЅРёСЏ Рё Р°СѓСЃС‚СЃРѕСЂСЃРёРЅРіР°:
+-- РРјСЏ, Р¤Р°РјРёР»РёСЏ, Р”РѕР»Р¶РЅРѕСЃС‚СЊ, Email, TРµР»РµС„РѕРЅ, Р”Р°С‚Р° С‚СЂСѓРґРѕСѓСЃС‚СЂРѕР№СЃС‚РІР° (РІР°Р¶РЅРѕ РґР»СЏ РїРѕРЅРёРјР°РЅРёСЏ РѕРїС‹С‚Р° СЃРѕС‚СЂСѓРґРЅРёРєР°). 
 
 DROP TABLE IF EXISTS managers;
 CREATE TABLE managers (
 	id SERIAL PRIMARY KEY, 
-	firstname VARCHAR (20) COMMENT 'Фамилия',
-	lastname VARCHAR (20) COMMENT 'Имя',
+	firstname VARCHAR (20) COMMENT 'Р¤Р°РјРёР»РёСЏ',
+	lastname VARCHAR (20) COMMENT 'РРјСЏ',
 	email VARCHAR (30) UNIQUE COMMENT 'Email',
-	phone BIGINT COMMENT 'Телефон',
-	started_at DATE DEFAULT NULL COMMENT 'Работает с..',
-	`position` ENUM ('Менеджер ОС', 'Менеджер АУ') COMMENT 'Должность сотрудника',
-	speak_english BIT DEFAULT 0, -- владение иностранными языками
+	phone BIGINT COMMENT 'РўРµР»РµС„РѕРЅ',
+	started_at DATE DEFAULT NULL COMMENT 'Р Р°Р±РѕС‚Р°РµС‚ СЃ..',
+	`position` ENUM ('РњРµРЅРµРґР¶РµСЂ РћРЎ', 'РњРµРЅРµРґР¶РµСЂ РђРЈ') COMMENT 'Р”РѕР»Р¶РЅРѕСЃС‚СЊ СЃРѕС‚СЂСѓРґРЅРёРєР°',
+	speak_english BIT DEFAULT 0, -- РІР»Р°РґРµРЅРёРµ РёРЅРѕСЃС‚СЂР°РЅРЅС‹РјРё СЏР·С‹РєР°РјРё
 	INDEX managers_firstname_lastname_idx(firstname, lastname)
-) COMMENT = 'Менеджеры отдела снабжения и аутсорсинга';	
+) COMMENT = 'РњРµРЅРµРґР¶РµСЂС‹ РѕС‚РґРµР»Р° СЃРЅР°Р±Р¶РµРЅРёСЏ Рё Р°СѓС‚СЃРѕСЂСЃРёРЅРіР°';	
 
--- Создаем таблицу Suppliers, в которой будут храниться 
--- данные о поставщиках: Наименование, контактное лицо, страна, город, контактная информация, рейтинг поставщика,
--- и его текущий статус - активный, неактивный, заблокирован. 
+-- РЎРѕР·РґР°РµРј С‚Р°Р±Р»РёС†Сѓ Suppliers, РІ РєРѕС‚РѕСЂРѕР№ Р±СѓРґСѓС‚ С…СЂР°РЅРёС‚СЊСЃСЏ 
+-- РґР°РЅРЅС‹Рµ Рѕ РїРѕСЃС‚Р°РІС‰РёРєР°С…: РќР°РёРјРµРЅРѕРІР°РЅРёРµ, РєРѕРЅС‚Р°РєС‚РЅРѕРµ Р»РёС†Рѕ, СЃС‚СЂР°РЅР°, РіРѕСЂРѕРґ, РєРѕРЅС‚Р°РєС‚РЅР°СЏ РёРЅС„РѕСЂРјР°С†РёСЏ, СЂРµР№С‚РёРЅРі РїРѕСЃС‚Р°РІС‰РёРєР°,
+-- Рё РµРіРѕ С‚РµРєСѓС‰РёР№ СЃС‚Р°С‚СѓСЃ - Р°РєС‚РёРІРЅС‹Р№, РЅРµР°РєС‚РёРІРЅС‹Р№, Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ. 
 
 DROP TABLE IF EXISTS suppliers;
 CREATE TABLE suppliers (
 	id SERIAL PRIMARY KEY, 
 	product_group_id BIGINT UNSIGNED,  
-	company_name VARCHAR (100) NOT NULL COMMENT 'Наименование контрагента',
-	contact_person VARCHAR (50) NOT NULL COMMENT 'Контактное лицо',
-	contact_title VARCHAR (30) NOT NULL COMMENT 'Должность контактного лица',
-	country VARCHAR (30) COMMENT 'Страна',
-	city VARCHAR (30) COMMENT 'Город', 
-	phone BIGINT CHECK (phone !='') COMMENT 'Телефон', 
+	company_name VARCHAR (100) NOT NULL COMMENT 'РќР°РёРјРµРЅРѕРІР°РЅРёРµ РєРѕРЅС‚СЂР°РіРµРЅС‚Р°',
+	contact_person VARCHAR (50) NOT NULL COMMENT 'РљРѕРЅС‚Р°РєС‚РЅРѕРµ Р»РёС†Рѕ',
+	contact_title VARCHAR (30) NOT NULL COMMENT 'Р”РѕР»Р¶РЅРѕСЃС‚СЊ РєРѕРЅС‚Р°РєС‚РЅРѕРіРѕ Р»РёС†Р°',
+	country VARCHAR (30) COMMENT 'РЎС‚СЂР°РЅР°',
+	city VARCHAR (30) COMMENT 'Р“РѕСЂРѕРґ', 
+	phone BIGINT CHECK (phone !='') COMMENT 'РўРµР»РµС„РѕРЅ', 
 	email VARCHAR (30) CHECK (email !='') COMMENT 'Email', 
-	`status` ENUM ('active', 'not-active', 'blocked') COMMENT 'Текущий статус',
-	`raiting` ENUM ('HIGH-A', 'MEDIUM-B', 'LOW-C') COMMENT 'Рейтинг',
-	added_at DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Дата добавления в БД',
+	`status` ENUM ('active', 'not-active', 'blocked') COMMENT 'РўРµРєСѓС‰РёР№ СЃС‚Р°С‚СѓСЃ',
+	`raiting` ENUM ('HIGH-A', 'MEDIUM-B', 'LOW-C') COMMENT 'Р РµР№С‚РёРЅРі',
+	added_at DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Р”Р°С‚Р° РґРѕР±Р°РІР»РµРЅРёСЏ РІ Р‘Р”',
 	INDEX suppliers_name_idx(company_name)
 	
-) COMMENT = 'Поставщики';
+) COMMENT = 'РџРѕСЃС‚Р°РІС‰РёРєРё';
 
--- Создаем таблицу Product_group, в которой будут храниться
--- данные о возможных подгруппах товаров: Наименование группы (например Ткани, Фурнитура).
--- Все подгруппы будут входить в три основные группы: сырье, готовая продукция, услуги.
+-- РЎРѕР·РґР°РµРј С‚Р°Р±Р»РёС†Сѓ Product_group, РІ РєРѕС‚РѕСЂРѕР№ Р±СѓРґСѓС‚ С…СЂР°РЅРёС‚СЊСЃСЏ
+-- РґР°РЅРЅС‹Рµ Рѕ РІРѕР·РјРѕР¶РЅС‹С… РїРѕРґРіСЂСѓРїРїР°С… С‚РѕРІР°СЂРѕРІ: РќР°РёРјРµРЅРѕРІР°РЅРёРµ РіСЂСѓРїРїС‹ (РЅР°РїСЂРёРјРµСЂ РўРєР°РЅРё, Р¤СѓСЂРЅРёС‚СѓСЂР°).
+-- Р’СЃРµ РїРѕРґРіСЂСѓРїРїС‹ Р±СѓРґСѓС‚ РІС…РѕРґРёС‚СЊ РІ С‚СЂРё РѕСЃРЅРѕРІРЅС‹Рµ РіСЂСѓРїРїС‹: СЃС‹СЂСЊРµ, РіРѕС‚РѕРІР°СЏ РїСЂРѕРґСѓРєС†РёСЏ, СѓСЃР»СѓРіРё.
 
 DROP TABLE IF EXISTS product_groups;
 CREATE TABLE product_groups (
  	id SERIAL, 
-	product_group_name VARCHAR (50) NOT NULL COMMENT 'Товарная группа',
-	main_group ENUM ('1211 - сырье', '1212 - готовая продукция', '1213 - услуги', '1215 - прочее')
-) COMMENT = 'Товарные группы';
+	product_group_name VARCHAR (50) NOT NULL COMMENT 'РўРѕРІР°СЂРЅР°СЏ РіСЂСѓРїРїР°',
+	main_group ENUM ('1211 - СЃС‹СЂСЊРµ', '1212 - РіРѕС‚РѕРІР°СЏ РїСЂРѕРґСѓРєС†РёСЏ', '1213 - СѓСЃР»СѓРіРё', '1215 - РїСЂРѕС‡РµРµ')
+) COMMENT = 'РўРѕРІР°СЂРЅС‹Рµ РіСЂСѓРїРїС‹';
 
--- Задаем внешний ключ для таблицы Suppliers
+-- Р—Р°РґР°РµРј РІРЅРµС€РЅРёР№ РєР»СЋС‡ РґР»СЏ С‚Р°Р±Р»РёС†С‹ Suppliers
 ALTER TABLE suppliers ADD CONSTRAINT fk_product_id
 FOREIGN KEY (product_group_id) REFERENCES product_groups(id)
 ON UPDATE CASCADE ON DELETE set NULL;
 
--- Создаем таблицу Nomenclature, в которой будут храниться
--- данные о товарных позиция: Артикул, Наименование, Группа.
+-- РЎРѕР·РґР°РµРј С‚Р°Р±Р»РёС†Сѓ Nomenclature, РІ РєРѕС‚РѕСЂРѕР№ Р±СѓРґСѓС‚ С…СЂР°РЅРёС‚СЊСЃСЏ
+-- РґР°РЅРЅС‹Рµ Рѕ С‚РѕРІР°СЂРЅС‹С… РїРѕР·РёС†РёСЏ: РђСЂС‚РёРєСѓР», РќР°РёРјРµРЅРѕРІР°РЅРёРµ, Р“СЂСѓРїРїР°.
 
 DROP TABLE IF EXISTS nomenclature;
 CREATE TABLE nomenclature (
  	id SERIAL PRIMARY KEY,
  	group_id BIGINT UNSIGNED,
-	`number` INT (100) NOT NULL UNIQUE COMMENT 'Артикул/Номер', 
-	name VARCHAR (255) NOT NULL COMMENT 'Наименование', 
-	units ENUM ('шт.', 'м', 'п.м.') COMMENT 'Ед.измерения',
+	`number` INT (100) NOT NULL UNIQUE COMMENT 'РђСЂС‚РёРєСѓР»/РќРѕРјРµСЂ', 
+	name VARCHAR (255) NOT NULL COMMENT 'РќР°РёРјРµРЅРѕРІР°РЅРёРµ', 
+	units ENUM ('С€С‚.', 'Рј', 'Рї.Рј.') COMMENT 'Р•Рґ.РёР·РјРµСЂРµРЅРёСЏ',
 FOREIGN KEY (group_id) REFERENCES product_groups(id) ON UPDATE CASCADE ON DELETE CASCADE
-) COMMENT = 'Номенклатура';
+) COMMENT = 'РќРѕРјРµРЅРєР»Р°С‚СѓСЂР°';
 
--- Создаем таблицу Orders, в которой будут храниться
+-- РЎРѕР·РґР°РµРј С‚Р°Р±Р»РёС†Сѓ Orders, РІ РєРѕС‚РѕСЂРѕР№ Р±СѓРґСѓС‚ С…СЂР°РЅРёС‚СЊСЃСЏ
 
 DROP TABLE IF EXISTS orders;
 CREATE TABLE orders (
@@ -87,67 +87,73 @@ CREATE TABLE orders (
 	manager_id 	BIGINT UNSIGNED,
 	nomenclature_id BIGINT UNSIGNED, 
 	supplier_id BIGINT UNSIGNED,
-	order_number BIGINT UNSIGNED UNIQUE NOT NULL COMMENT 'Номер заказа',
-	quantity INT UNSIGNED NOT NULL COMMENT 'Кол-во', 
-	unit_price DECIMAL (11,2) NOT NULL COMMENT 'Цена за ед.', 
-	discount FLOAT (3,2) UNSIGNED COMMENT 'К-т скидки', -- к-т скидки: 1 - если нет скидки, 0.7- скидка 30%, 0.9 - скидка 10%
-	total_amount FLOAT AS (quantity * unit_price * discount) COMMENT 'Итого сумма заказа', 
-	order_status ENUM ('fully-confirmed', 'partly-confirmed', 'waiting confirmation', 'rejected', 'delayed') COMMENT 'Статус заказа',
-	plan_delivery_date DATE COMMENT 'Плановая дата поставки',
-	fact_delivery_date DATE DEFAULT NULL COMMENT 'Фактическая дата поставки',
-	total_delay_days TINYINT AS (fact_delivery_date - plan_delivery_date) COMMENT 'Отлонение План/Факт, дн.',
-	order_date DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Дата заказа',
+	order_number BIGINT UNSIGNED UNIQUE NOT NULL COMMENT 'РќРѕРјРµСЂ Р·Р°РєР°Р·Р°',
+	quantity INT UNSIGNED NOT NULL COMMENT 'РљРѕР»-РІРѕ', 
+	unit_price DECIMAL (11,2) NOT NULL COMMENT 'Р¦РµРЅР° Р·Р° РµРґ.', 
+	discount FLOAT (3,2) UNSIGNED COMMENT 'Рљ-С‚ СЃРєРёРґРєРё', -- Рє-С‚ СЃРєРёРґРєРё: 1 - РµСЃР»Рё РЅРµС‚ СЃРєРёРґРєРё, 0.7- СЃРєРёРґРєР° 30%, 0.9 - СЃРєРёРґРєР° 10%
+	total_amount FLOAT AS (quantity * unit_price * discount) COMMENT 'РС‚РѕРіРѕ СЃСѓРјРјР° Р·Р°РєР°Р·Р°', 
+	order_status ENUM ('fully-confirmed', 'partly-confirmed', 'waiting confirmation', 'rejected', 'delayed') COMMENT 'РЎС‚Р°С‚СѓСЃ Р·Р°РєР°Р·Р°',
+	plan_delivery_date DATE COMMENT 'РџР»Р°РЅРѕРІР°СЏ РґР°С‚Р° РїРѕСЃС‚Р°РІРєРё',
+	fact_delivery_date DATE DEFAULT NULL COMMENT 'Р¤Р°РєС‚РёС‡РµСЃРєР°СЏ РґР°С‚Р° РїРѕСЃС‚Р°РІРєРё',
+	total_delay_days TINYINT AS (fact_delivery_date - plan_delivery_date) COMMENT 'РћС‚Р»РѕРЅРµРЅРёРµ РџР»Р°РЅ/Р¤Р°РєС‚, РґРЅ.',
+	order_date DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Р”Р°С‚Р° Р·Р°РєР°Р·Р°',
 FOREIGN KEY (manager_id) REFERENCES managers(id) ON UPDATE CASCADE ON DELETE SET NULL,
 FOREIGN KEY (nomenclature_id) REFERENCES nomenclature(id) ON UPDATE CASCADE ON DELETE SET NULL,
 FOREIGN KEY (supplier_id) REFERENCES suppliers(id) ON UPDATE CASCADE ON DELETE SET NULL
-) COMMENT = 'Заказы поставщикам';
+) COMMENT = 'Р—Р°РєР°Р·С‹ РїРѕСЃС‚Р°РІС‰РёРєР°Рј';
  
--- Создаем таблицу Payments, в которой будут храниться
--- данные о платежах пл контрагентам: Дата платежа, Внешний ключ на таблицу заказов, 
--- Сумма платежа, сумма внесенной предоплаты по заказу, сумма балансового платежа.
+-- РЎРѕР·РґР°РµРј С‚Р°Р±Р»РёС†Сѓ Payments, РІ РєРѕС‚РѕСЂРѕР№ Р±СѓРґСѓС‚ С…СЂР°РЅРёС‚СЊСЃСЏ
+-- РґР°РЅРЅС‹Рµ Рѕ РїР»Р°С‚РµР¶Р°С… РїР» РєРѕРЅС‚СЂР°РіРµРЅС‚Р°Рј: Р”Р°С‚Р° РїР»Р°С‚РµР¶Р°, Р’РЅРµС€РЅРёР№ РєР»СЋС‡ РЅР° С‚Р°Р±Р»РёС†Сѓ Р·Р°РєР°Р·РѕРІ, 
+-- РЎСѓРјРјР° РїР»Р°С‚РµР¶Р°, СЃСѓРјРјР° РІРЅРµСЃРµРЅРЅРѕР№ РїСЂРµРґРѕРїР»Р°С‚С‹ РїРѕ Р·Р°РєР°Р·Сѓ, СЃСѓРјРјР° Р±Р°Р»Р°РЅСЃРѕРІРѕРіРѕ РїР»Р°С‚РµР¶Р°.
 
 DROP TABLE IF EXISTS payments; 
 CREATE TABLE payments (
 	id SERIAL PRIMARY KEY,
 	order_id BIGINT UNSIGNED,
-	payment_date_at DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Дата платежа',
-	payment_updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Дата обновления платежа', -- например при доплате
-	paid_amount DECIMAL (11,2) COMMENT 'Оплачено (предоплата)',
-	amount DECIMAL (11,2) COMMENT 'Сумма платежа ИТОГО', 
-	balance FLOAT AS (amount - paid_amount) COMMENT 'Осталось оплатить',
+	payment_date_at DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Р”Р°С‚Р° РїР»Р°С‚РµР¶Р°',
+	payment_updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Р”Р°С‚Р° РѕР±РЅРѕРІР»РµРЅРёСЏ РїР»Р°С‚РµР¶Р°', -- РЅР°РїСЂРёРјРµСЂ РїСЂРё РґРѕРїР»Р°С‚Рµ
+	paid_amount DECIMAL (11,2) COMMENT 'РћРїР»Р°С‡РµРЅРѕ (РїСЂРµРґРѕРїР»Р°С‚Р°)',
+	amount DECIMAL (11,2) COMMENT 'РЎСѓРјРјР° РїР»Р°С‚РµР¶Р° РРўРћР“Рћ', 
+	balance FLOAT AS (amount - paid_amount) COMMENT 'РћСЃС‚Р°Р»РѕСЃСЊ РѕРїР»Р°С‚РёС‚СЊ',
 FOREIGN KEY (order_id) REFERENCES orders(id) ON UPDATE CASCADE ON DELETE SET NULL
-) COMMENT = 'Платежи поставщикам';
+) COMMENT = 'РџР»Р°С‚РµР¶Рё РїРѕСЃС‚Р°РІС‰РёРєР°Рј';
 
 
 
--- Создаем таблицу Departments, в которой будут храниться
--- данные об отделах и департаментах предприятия (id, имя, дата создания). 
+-- РЎРѕР·РґР°РµРј С‚Р°Р±Р»РёС†Сѓ Departments, РІ РєРѕС‚РѕСЂРѕР№ Р±СѓРґСѓС‚ С…СЂР°РЅРёС‚СЊСЃСЏ
+-- РґР°РЅРЅС‹Рµ РѕР± РѕС‚РґРµР»Р°С… Рё РґРµРїР°СЂС‚Р°РјРµРЅС‚Р°С… РїСЂРµРґРїСЂРёСЏС‚РёСЏ (id, РёРјСЏ, РґР°С‚Р° СЃРѕР·РґР°РЅРёСЏ). 
 
 DROP TABLE IF EXISTS departments; 
 CREATE TABLE departments (
 	id SERIAL PRIMARY KEY,
-	department_name VARCHAR (255) NOT NULL UNIQUE COMMENT 'Департамент',
+	department_name VARCHAR (255) NOT NULL UNIQUE COMMENT 'Р”РµРїР°СЂС‚Р°РјРµРЅС‚',
 	created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-) COMMENT = 'Департаменты';
+) COMMENT = 'Р”РµРїР°СЂС‚Р°РјРµРЅС‚С‹';
 
--- Создаем таблицу Requests, в которой будут храниться
--- данные о поступающих заявках в отдел снабжения: внешние ключи nomenclature_id, department_id, 
--- требуемое кол-во, статус заявки, дата заявки, дата закрытия заявки (поступление товаров на склад). 
+-- РЎРѕР·РґР°РµРј С‚Р°Р±Р»РёС†Сѓ Requests, РІ РєРѕС‚РѕСЂРѕР№ Р±СѓРґСѓС‚ С…СЂР°РЅРёС‚СЊСЃСЏ
+-- РґР°РЅРЅС‹Рµ Рѕ РїРѕСЃС‚СѓРїР°СЋС‰РёС… Р·Р°СЏРІРєР°С… РІ РѕС‚РґРµР» СЃРЅР°Р±Р¶РµРЅРёСЏ: РІРЅРµС€РЅРёРµ РєР»СЋС‡Рё nomenclature_id, department_id, 
+-- С‚СЂРµР±СѓРµРјРѕРµ РєРѕР»-РІРѕ, СЃС‚Р°С‚СѓСЃ Р·Р°СЏРІРєРё, РґР°С‚Р° Р·Р°СЏРІРєРё, РґР°С‚Р° Р·Р°РєСЂС‹С‚РёСЏ Р·Р°СЏРІРєРё (РїРѕСЃС‚СѓРїР»РµРЅРёРµ С‚РѕРІР°СЂРѕРІ РЅР° СЃРєР»Р°Рґ). 
 
 DROP TABLE IF EXISTS requests; 
 CREATE TABLE requests (
 	id SERIAL PRIMARY KEY,
 	department_id BIGINT UNSIGNED,
 	nomenclature_id BIGINT UNSIGNED,
-	request_date_at DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Дата заявки',
+	request_date_at DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Р”Р°С‚Р° Р·Р°СЏРІРєРё',
 	request_closed_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-	request_quanity INT UNSIGNED NOT NULL COMMENT 'Кол-во',
-	`status` ENUM ('closed', 'cancelled', 'in-process') COMMENT 'Статус заявки',
+	request_quanity INT UNSIGNED NOT NULL COMMENT 'РљРѕР»-РІРѕ',
+	`status` ENUM ('closed', 'cancelled', 'in-process') COMMENT 'РЎС‚Р°С‚СѓСЃ Р·Р°СЏРІРєРё',
 	FOREIGN KEY (nomenclature_id) REFERENCES nomenclature(id) ON UPDATE CASCADE ON DELETE SET NULL,
 	FOREIGN KEY (department_id) REFERENCES departments(id) ON UPDATE CASCADE ON DELETE SET NULL
-) COMMENT = 'Заявки в снабжение';
+) COMMENT = 'Р—Р°СЏРІРєРё РІ СЃРЅР°Р±Р¶РµРЅРёРµ';
 
 ALTER TABLE requests CHANGE status status ENUM('closed', 'cancelled', 'in-process', 'new-request');
+
+
+
+
+
+
 
 
 
